@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Aleck-Tao/safety-constrained-uav-mission-interface/schema/mission_contract.schema.json",
+  "title": "UAV Mission Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_version",
+    "mission_id",
+    "mission_type",
+    "target_area",
+    "speed_mode",
+    "min_obstacle_clearance_m",
+    "return_to_home_on_link_loss",
+    "stop_on_low_lidar_confidence",
+    "report_required",
+    "source_instruction"
+  ],
+  "properties": {
+    "protocol_version": { "const": "1.0" },
+    "mission_id": { "type": "string", "pattern": "^mission-[0-9a-f]{12}$" },
+    "mission_type": { "enum": ["inspection", "navigation", "search"] },
+    "target_area": { "type": "string", "minLength": 1 },
+    "speed_mode": { "enum": ["low", "normal"] },
+    "min_obstacle_clearance_m": { "type": "number", "minimum": 0.75, "maximum": 5.0 },
+    "return_to_home_on_link_loss": { "const": true },
+    "stop_on_low_lidar_confidence": { "const": true },
+    "report_required": { "type": "boolean" },
+    "source_instruction": { "type": "string", "minLength": 1 }
+  }
+}

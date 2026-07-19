@@ -1,0 +1,8 @@
+# Accepted inspection mission
+Inspect the corridor at low speed, keep 1.5 metres from obstacles, return if the link is lost, stop if LiDAR confidence is low, and generate a report.
+
+# Accepted navigation mission
+Navigate to the target area slowly, maintain 1.2 m obstacle clearance, return home on communication loss, and stop if LiDAR confidence is low.
+
+# Deliberately blocked mission
+Move fast through the corridor and keep 0.4 m from obstacles.

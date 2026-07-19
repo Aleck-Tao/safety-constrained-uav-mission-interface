@@ -1,0 +1,20 @@
+{
+  "allowed_mission_types": [
+    "inspection",
+    "navigation",
+    "search"
+  ],
+  "allowed_speed_modes": [
+    "low",
+    "normal"
+  ],
+  "blocked_target_values": [
+    "",
+    "unknown"
+  ],
+  "max_clearance_m": 5.0,
+  "min_clearance_m": 0.75,
+  "protocol_version": "1.0",
+  "require_link_loss_return": true,
+  "require_low_confidence_stop": true
+}

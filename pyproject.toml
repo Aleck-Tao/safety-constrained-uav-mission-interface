@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safety-constrained-uav-mission-interface"
+version = "1.0.0"
+description = "Typed mission contracts and deterministic safety gates for UAV language interfaces"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Yuanyuan Tao" }]
+dependencies = []
+keywords = ["uav", "robotics-safety", "vla", "ai-agent", "mission-planning"]
+
+[project.scripts]
+mission-interface = "mission_interface.cli:main"
+
+[project.urls]
+Repository = "https://github.com/Aleck-Tao/safety-constrained-uav-mission-interface"
+Portfolio = "https://github.com/Aleck-Tao/computer-vision-autonomous-systems-portfolio"
+
+[tool.setuptools.packages.find]
+include = ["mission_interface*"]

@@ -1,0 +1,74 @@
+{
+  "reports": [
+    {
+      "accepted": true,
+      "contract": {
+        "min_obstacle_clearance_m": 1.5,
+        "mission_id": "mission-dcf6701c3384",
+        "mission_type": "inspection",
+        "protocol_version": "1.0",
+        "report_required": true,
+        "return_to_home_on_link_loss": true,
+        "source_instruction": "Inspect the corridor at low speed, keep 1.5 metres from obstacles, return if the link is lost, stop if LiDAR confidence is low, and generate a report.",
+        "speed_mode": "low",
+        "stop_on_low_lidar_confidence": true,
+        "target_area": "corridor"
+      },
+      "issues": []
+    },
+    {
+      "accepted": true,
+      "contract": {
+        "min_obstacle_clearance_m": 1.2,
+        "mission_id": "mission-20877691ae4c",
+        "mission_type": "navigation",
+        "protocol_version": "1.0",
+        "report_required": false,
+        "return_to_home_on_link_loss": true,
+        "source_instruction": "Navigate to the target area slowly, maintain 1.2 m obstacle clearance, return home on communication loss, and stop if LiDAR confidence is low.",
+        "speed_mode": "low",
+        "stop_on_low_lidar_confidence": true,
+        "target_area": "target_area"
+      },
+      "issues": []
+    },
+    {
+      "accepted": false,
+      "contract": {
+        "min_obstacle_clearance_m": 0.4,
+        "mission_id": "mission-04335a19e808",
+        "mission_type": "navigation",
+        "protocol_version": "1.0",
+        "report_required": false,
+        "return_to_home_on_link_loss": false,
+        "source_instruction": "Move fast through the corridor and keep 0.4 m from obstacles.",
+        "speed_mode": "high",
+        "stop_on_low_lidar_confidence": false,
+        "target_area": "corridor"
+      },
+      "issues": [
+        {
+          "code": "SPEED_MODE",
+          "message": "Unsupported speed mode: high"
+        },
+        {
+          "code": "CLEARANCE_LOW",
+          "message": "Obstacle clearance too low: 0.40 m"
+        },
+        {
+          "code": "LINK_LOSS_BEHAVIOR",
+          "message": "Return-to-home behavior is required for link loss"
+        },
+        {
+          "code": "LOW_CONFIDENCE_BEHAVIOR",
+          "message": "Stop behavior is required for low LiDAR confidence"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "accepted": 2,
+    "blocked": 1,
+    "total": 3
+  }
+}
