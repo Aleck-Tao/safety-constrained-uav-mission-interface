@@ -4,7 +4,7 @@
 
 A small Python prototype for turning constrained English mission requests into JSON contracts, then checking those contracts against an explicit UAV mission policy.
 
-The front end uses keyword and pattern matching. The useful design question is which decisions belong in language interpretation and which can be checked directly on structured fields.
+The front end matches a small set of complete English clauses. The useful design question is which decisions belong in language interpretation and which can be checked directly on structured fields.
 
 ## Three requests, three inspectable decisions
 
@@ -30,7 +30,9 @@ flowchart LR
 
 The contract keeps mission type, target, clearance, speed, contingency flags and the source text together. Checking these fields separately from parsing makes a policy change inspectable and allows a different parser to use the same interface.
 
-There are two different validation questions here. A field check can establish that a clearance is finite and within range, or that a required flag is present. It cannot establish that the text was interpreted correctly. The current keyword parser does not resolve negation or conflicting instructions, and defaults to normal speed when no speed phrase is recognized. The examples are therefore controlled contract cases, not an evaluation of unrestricted natural-language understanding.
+The parser accepts complete mission, clearance and contingency clauses like those in the examples. Unknown, negated, repeated or conflicting clauses produce `INSTRUCTION_SYNTAX`; missing contingencies are blocked by policy. Clearance must occur in `keep ... from obstacles` or `maintain ... obstacle clearance`, so an unrelated travel distance cannot become obstacle clearance. Signed values remain signed. Omitting speed in a supported mission clause selects normal speed.
+
+Supplied JSON requires actual booleans, finite numbers and all contract fields: the string `"false"` is never converted to `true`. Invalid input produces a structured `CONTRACT_INPUT` result and exit code 2. These are controlled grammar cases, not unrestricted natural-language understanding.
 
 Likewise, an accepted `return_to_home_on_link_loss` flag records a requirement; it does not execute or monitor return-to-home. Runtime perception, navigation and flight-control integration would have to implement and enforce the contract.
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from typing import Any
 
 
@@ -26,22 +26,23 @@ class MissionContract:
 
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> "MissionContract":
-        return cls(
-            protocol_version=str(value.get("protocol_version", "")),
-            mission_id=str(value.get("mission_id", "")),
-            mission_type=str(value.get("mission_type", "unknown")),
-            target_area=str(value.get("target_area", "unknown")),
-            speed_mode=str(value.get("speed_mode", "unknown")),
-            min_obstacle_clearance_m=(
-                float(value["min_obstacle_clearance_m"])
-                if value.get("min_obstacle_clearance_m") is not None
-                else float("nan")
-            ),
-            return_to_home_on_link_loss=bool(value.get("return_to_home_on_link_loss", False)),
-            stop_on_low_lidar_confidence=bool(value.get("stop_on_low_lidar_confidence", False)),
-            report_required=bool(value.get("report_required", False)),
-            source_instruction=str(value.get("source_instruction", "")),
-        )
+        if not isinstance(value, dict):
+            raise ValueError("Contract must be a JSON object")
+        required = {field.name for field in fields(cls)}
+        if set(value) != required:
+            raise ValueError(f"Contract fields differ: missing={sorted(required - set(value))}, unexpected={sorted(set(value) - required)}")
+        booleans = {"return_to_home_on_link_loss", "stop_on_low_lidar_confidence", "report_required"}
+        for name in sorted(required):
+            item = value[name]
+            if name in booleans:
+                if type(item) is not bool:
+                    raise ValueError(f"{name} must be a JSON boolean")
+            elif name == "min_obstacle_clearance_m":
+                if type(item) not in (int, float) or not math.isfinite(item):
+                    raise ValueError(f"{name} must be a finite JSON number")
+            elif not isinstance(item, str) or not item.strip():
+                raise ValueError(f"{name} must be a nonempty JSON string")
+        return cls(**value)
 
 
 @dataclass(frozen=True)
@@ -56,12 +57,12 @@ class ValidationIssue:
 @dataclass(frozen=True)
 class ValidationReport:
     accepted: bool
-    contract: MissionContract
+    contract: MissionContract | None
     issues: tuple[ValidationIssue, ...]
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "accepted": self.accepted,
-            "contract": self.contract.to_dict(),
+            "contract": self.contract.to_dict() if self.contract is not None else None,
             "issues": [issue.to_dict() for issue in self.issues],
         }

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .models import MissionContract
+from .models import MissionContract, ValidationIssue, ValidationReport
 from .policy import DEFAULT_POLICY, compile_instruction, load_policy, validate_contract
 
 
@@ -45,8 +45,11 @@ def main(argv: list[str] | None = None) -> int:
         _write_json(report.to_dict(), args.out)
         return 0 if report.accepted else 2
     if args.command == "validate":
-        contract = MissionContract.from_dict(json.loads(args.contract.read_text(encoding="utf-8")))
-        report = validate_contract(contract, policy)
+        try:
+            contract = MissionContract.from_dict(json.loads(args.contract.read_text(encoding="utf-8")))
+            report = validate_contract(contract, policy)
+        except (ValueError, OSError) as exc:
+            report = ValidationReport(False, None, (ValidationIssue("CONTRACT_INPUT", str(exc)),))
         _write_json(report.to_dict(), args.out)
         return 0 if report.accepted else 2
 

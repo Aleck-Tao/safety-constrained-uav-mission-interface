@@ -49,4 +49,8 @@ def validate_contract(contract: MissionContract, policy: dict[str, Any]) -> Vali
 
 
 def compile_instruction(text: str, policy: dict[str, Any] | None = None) -> ValidationReport:
-    return validate_contract(parse_instruction(text), policy or load_policy())
+    try:
+        contract = parse_instruction(text)
+    except ValueError as exc:
+        return ValidationReport(False, None, (ValidationIssue("INSTRUCTION_SYNTAX", str(exc)),))
+    return validate_contract(contract, policy or load_policy())
