@@ -44,7 +44,7 @@ class InputBoundaryTests(unittest.TestCase):
         for field in ("return_to_home_on_link_loss", "stop_on_low_lidar_confidence", "report_required"):
             for value in ("false", "true", 1, 0, None, [], {}):
                 cases.append(json.dumps({**contract, field: value}))
-        for value in ("1.5", True, None, float("nan"), float("inf")):
+        for value in ("1.5", True, None, float("nan"), float("inf"), 10**1000, -(10**1000)):
             cases.append(json.dumps({**contract, "min_obstacle_clearance_m": value}))
         cases.extend(["[]", "null", "{", json.dumps({**contract, "unknown": 1}), "{}"])
         with tempfile.TemporaryDirectory() as directory:

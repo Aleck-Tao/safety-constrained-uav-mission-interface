@@ -38,7 +38,11 @@ class MissionContract:
                 if type(item) is not bool:
                     raise ValueError(f"{name} must be a JSON boolean")
             elif name == "min_obstacle_clearance_m":
-                if type(item) not in (int, float) or not math.isfinite(item):
+                try:
+                    finite_number = type(item) in (int, float) and math.isfinite(item)
+                except OverflowError:
+                    finite_number = False
+                if not finite_number:
                     raise ValueError(f"{name} must be a finite JSON number")
             elif not isinstance(item, str) or not item.strip():
                 raise ValueError(f"{name} must be a nonempty JSON string")
